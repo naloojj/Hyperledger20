@@ -4,9 +4,11 @@ This tutorial will demonstrate the use of collections to provide storage and ret
 
 이 튜토리얼은 컬렉션을 사용하여 승인 된 조직의 피어를 위해 블록체인 네트워크에서 private data 를 저장하고 검색하는 방법을 보여줍니다.
 
+
 The information in this tutorial assumes knowledge of private data stores and their use cases. For more information, check out [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html).
 
 이 튜토리얼의 정보는 private data 저장소 및 해당 사용사례에 대한 지식을 전제로 합니다. 자세한 내용은 [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html)를 확인하십시오.
+
 
 **Note**
 
@@ -14,9 +16,11 @@ These instructions use the new Fabric chaincode lifecycle introduced in the Fabr
 
 이 자료는 Fabric v2.0 Alpha 릴리스에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial] (https://hyperledger-fabric.readthedocs.io/en/release- 1.4/private_data_tutorial.html)을 확인하십시오.
 
+
 The tutorial will take you through the following steps to practice defining, configuring and using private data with Fabric:
 
 이 튜토리얼에서는 Fabric에서 private data를 정의, 구성 및 사용하는 방법을 연습하기 위해 다음 단계를 안내합니다.
+
 
 1. [Build a collection definition JSON file](https://hyperledger-fabric.readthedocs.io/en/latest/private_data_tutorial.html#pd-build-json)
 2. [Read and Write private data using chaincode APIs](https://hyperledger-fabric.readthedocs.io/en/latest/private_data_tutorial.html#pd-read-write-private-data)
@@ -32,13 +36,23 @@ This tutorial will use the [marbles private data sample](https://github.com/hyp
 
 이 튜토리얼은 private data의 수집, 생성 및 사용방법을 설명하기 위해 BYFN (Build Your First Network) 튜토리얼 네트워크에서 실행하는 [Marbles private data sample] (https://github.com/hyperledger/fabric-samples/tree/master/chaincode/marbles02_private) 을 사용합니다. marbles private data 샘플은 [Building Your First Network] (https://hyperledger-fabric.readthedocs.io/en/latest/build_network.html) (BYFN) 튜토리얼 네트워크에 배포됩니다. [Install Samples, Binaries and Docker Images] (https://hyperledger-fabric.readthedocs.io/en/latest/install.html) 작업을 완료해야 하지만 BYFN를 실행하는 것이 이 튜토리얼의 전제조건은 아닙니다. 대신 이 튜토리얼에서는 네트워크를 사용하는 데 필요한 명령이 제공됩니다. 각 단계에서 어떤 일이 일어나고 있는지 설명하여 실제로 샘플을 실행하지 않고도 튜토리얼을 이해할 수 있습니다.
 
+
 # **Build a collection definition JSON file**
 
 The first step in privatizing data on a channel is to build a collection definition which defines access to the private data.
 
-The collection definition describes who can persist data, how many peers the data is distributed to, how many peers are required to disseminate the private data, and how long the private data is persisted in the private database. Later, we will demonstrate how chaincode APIs `PutPrivateData`and `GetPrivateData` are used to map the collection to the private data being secured.
+채널에서 데이터를 개인화하는 첫 번째 단계는 private data에 대한 액세스를 정의하는 콜렉션 정의를 작성하는 것입니다.
+
+
+The collection definition describes who can persist data, how many peers the data is distributed to, how many peers are required to disseminate the private data, and how long the private data is persisted in the private database. Later, we will demonstrate how chaincode APIs `PutPrivateData`and `GetPrivateData` are used to map the collection to the private data being secured.
+
+컬렉션 정의는 데이터를 유지할 수있는 사람, 데이터가 분산되는 피어 수, private data를 배포하는데 필요한 피어 수 및 private DB에서 private data가 유지되는 기간을 설명합니다. 나중에 체인코드 API`PutPrivateData` 및`GetPrivateData`를 사용하여 컬렉션을 보안성 있는 private data에 매핑하는 방법을 설명합니다.
+
 
 A collection definition is composed of the following properties:
+
+컬렉션 정의는 다음 속성으로 구성됩니다"
+
 
 - `name`: Name of the collection.
 - `policy`: Defines the organization peers allowed to persist the collection data.
@@ -46,6 +60,13 @@ A collection definition is composed of the following properties:
 - `maxPeerCount`: For data redundancy purposes, the number of other peers that the current endorsing peer will attempt to distribute the data to. If an endorsing peer goes down, these other peers are available at commit time if there are requests to pull the private data.
 - `blockToLive`: For very sensitive information such as pricing or personal information, this value represents how long the data should live on the private database in terms of blocks. The data will live for this specified number of blocks on the private database and after that it will get purged, making this data obsolete from the network. To keep private data indefinitely, that is, to never purge private data, set the `blockToLive` property to `0`.
 - `memberOnlyRead`: a value of `true` indicates that peers automatically enforce that only clients belonging to one of the collection member organizations are allowed read access to private data.
+
+- `name` : 컬렉션 이름.
+- `policy` : 컬렉션 데이터를 유지할 수있는 조직 피어를 정의합니다.
+- `requiredPeerCount` : 체인코드의 보증 조건으로 private data를 배포하는데 필요한 피어 수
+- `maxPeerCount` : 데이터 중복을 위해 현재 보증하는 피어가 데이터를 배포하려고 시도하는 다른 피어의 수입니다. 보증피어가 다운되면 private data를 가져 오기 위한 요청이 있는 경우 커밋 시 다른 피어를 사용할 수 있습니다.
+-`blockToLive` : 가격 또는 개인 정보와 같은 매우 민감한 정보의 경우 이 값은 데이터가 private DB에 블록 단위로 얼마나 오래 있어야하는지 나타냅니다. 데이터는 private DB에서 이 지정된 수의 블록에 대해 존재하며 그 후에는 데이터가 제거되어 네트워크에서 사용되지 않습니다. private data를 무기한으로 유지하려면, 즉 절대로 삭제하지 않으려면 `blockblockToLive` 속성을 `0`으로 설정하십시오.
+- 'memberOnlyRead': 'true'값은 피어가 콜렉션 멤버 조직 중 하나에 속하는 클라이언트만 개인 데이터에 대한 읽기 액세스를 허용하도록 자동으로 적용함을 나타냅니다.
 
 To illustrate usage of private data, the marbles private data example contains two private data collection definitions: `collectionMarbles` and `collectionMarblePrivateDetails`. The `policy` property in the`collectionMarbles` definition allows all members of the channel (Org1 and Org2) to have the private data in a private database. The`collectionMarblesPrivateDetails` collection allows only members of Org1 to have the private data in their private database.
 
