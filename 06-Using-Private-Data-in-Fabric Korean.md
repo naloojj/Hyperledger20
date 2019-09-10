@@ -6,6 +6,8 @@ This tutorial will demonstrate the use of collections to provide storage and ret
 
 The information in this tutorial assumes knowledge of private data stores and their use cases. For more information, check out [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html).
 
+이 튜토리얼의 정보는 private data 저장소 및 해당 사용사례에 대한 지식을 전제로 합니다. 자세한 내용은 [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html)를 확인하십시오.
+
 **Note**
 
 These instructions use the new Fabric chaincode lifecycle introduced in the Fabric v2.0 Alpha release. If you would like to use the previous lifecycle model to use private data with chaincode, visit the v1.4 version of the [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html).
