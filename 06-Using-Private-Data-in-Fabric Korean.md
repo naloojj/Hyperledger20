@@ -2,6 +2,8 @@
 
 This tutorial will demonstrate the use of collections to provide storage and retrieval of private data on the blockchain network for authorized peers of organizations.
 
+이 튜토리얼은 컬렉션을 사용하여 승인 된 조직의 피어를 위해 블록체인 네트워크에서 private data 를 저장하고 검색하는 방법을 보여줍니다.
+
 The information in this tutorial assumes knowledge of private data stores and their use cases. For more information, check out [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html).
 
 **Note**
