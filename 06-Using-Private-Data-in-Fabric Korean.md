@@ -12,7 +12,7 @@ The information in this tutorial assumes knowledge of private data stores and th
 
 These instructions use the new Fabric chaincode lifecycle introduced in the Fabric v2.0 Alpha release. If you would like to use the previous lifecycle model to use private data with chaincode, visit the v1.4 version of the [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html).
 
-이 자료는 Fabric v2.0 Alpha 릴리스에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial] (https://hyperledger-fabric.readthedocs.io/en/release- 1.4 / private_data_tutorial.html)을 확인하십시오.
+이 자료는 Fabric v2.0 Alpha 릴리스에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial] (https://hyperledger-fabric.readthedocs.io/en/release- 1.4/private_data_tutorial.html)을 확인하십시오.
 
 The tutorial will take you through the following steps to practice defining, configuring and using private data with Fabric:
 
