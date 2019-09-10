@@ -12,7 +12,11 @@ The information in this tutorial assumes knowledge of private data stores and th
 
 These instructions use the new Fabric chaincode lifecycle introduced in the Fabric v2.0 Alpha release. If you would like to use the previous lifecycle model to use private data with chaincode, visit the v1.4 version of the [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html).
 
+이 자료는 Fabric v2.0 Alpha 릴리스에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial] (https://hyperledger-fabric.readthedocs.io/en/release- 1.4 / private_data_tutorial.html)을 확인하십시오.
+
 The tutorial will take you through the following steps to practice defining, configuring and using private data with Fabric:
+
+이 튜토리얼에서는 Fabric에서 private data를 정의, 구성 및 사용하는 방법을 연습하기 위해 다음 단계를 안내합니다.
 
 1. [Build a collection definition JSON file](https://hyperledger-fabric.readthedocs.io/en/latest/private_data_tutorial.html#pd-build-json)
 2. [Read and Write private data using chaincode APIs](https://hyperledger-fabric.readthedocs.io/en/latest/private_data_tutorial.html#pd-read-write-private-data)
@@ -25,6 +29,8 @@ The tutorial will take you through the following steps to practice defining, con
 9. [Additional resources](https://hyperledger-fabric.readthedocs.io/en/latest/private_data_tutorial.html#pd-ref-material)
 
 This tutorial will use the [marbles private data sample](https://github.com/hyperledger/fabric-samples/tree/master/chaincode/marbles02_private) — running on the Building Your First Network (BYFN) tutorial network — to demonstrate how to create, deploy, and use a collection of private data. The marbles private data sample will be deployed to the [Building Your First Network](https://hyperledger-fabric.readthedocs.io/en/latest/build_network.html)(BYFN) tutorial network. You should have completed the task [Install Samples, Binaries and Docker Images](https://hyperledger-fabric.readthedocs.io/en/latest/install.html); however, running the BYFN tutorial is not a prerequisite for this tutorial. Instead the necessary commands are provided throughout this tutorial to use the network. We will describe what is happening at each step, making it possible to understand the tutorial without actually running the sample.
+
+이 튜토리얼은 private data의 수집, 생성 및 사용방법을 설명하기 위해 BYFN (Build Your First Network) 튜토리얼 네트워크에서 실행하는 [Marbles private data sample] (https://github.com/hyperledger/fabric-samples/tree/master/chaincode/marbles02_private) 을 사용합니다. marbles private data 샘플은 [Building Your First Network] (https://hyperledger-fabric.readthedocs.io/en/latest/build_network.html) (BYFN) 튜토리얼 네트워크에 배포됩니다. [Install Samples, Binaries and Docker Images] (https://hyperledger-fabric.readthedocs.io/en/latest/install.html) 작업을 완료해야 하지만 BYFN를 실행하는 것이 이 튜토리얼의 전제조건은 아닙니다. 대신 이 튜토리얼에서는 네트워크를 사용하는 데 필요한 명령이 제공됩니다. 각 단계에서 어떤 일이 일어나고 있는지 설명하여 실제로 샘플을 실행하지 않고도 튜토리얼을 이해할 수 있습니다.
 
 # **Build a collection definition JSON file**
 
