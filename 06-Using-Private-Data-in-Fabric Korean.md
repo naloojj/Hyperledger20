@@ -75,11 +75,12 @@ For more information on building a policy definition refer to the [Endorsement 
 
 정책 정의의 자세한 내용은 [Endorsement policies](https://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies.html)를 참고하십시오.
 
-.. code:: bash
-
+```
 **//** collections_config**.**json
 [ { "name": "collectionMarbles", "policy": "OR('Org1MSP.member', 'Org2MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":1000000, "memberOnlyRead": true }, { "name": "collectionMarblePrivateDetails", "policy": "OR('Org1MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":3, "memberOnlyRead": true }
 ]
+```
+
 
 The data to be secured by these policies is mapped in chaincode and will be shown later in the tutorial.
 
