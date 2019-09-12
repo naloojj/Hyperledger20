@@ -12,6 +12,8 @@ The information in this tutorial assumes knowledge of private data stores and th
 
 These instructions use the new Fabric chaincode lifecycle introduced in the Fabric v2.0 Alpha release. If you would like to use the previous lifecycle model to use private data with chaincode, visit the v1.4 version of the [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html).
 
+**Note**
+
 이 자료는 Fabric v2.0 Alpha에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html)을 확인하십시오.
 
 The tutorial will take you through the following steps to practice defining, configuring and using private data with Fabric:
@@ -76,7 +78,7 @@ For more information on building a policy definition refer to the [Endorsement 
 정책 정의의 자세한 내용은 [Endorsement policies](https://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies.html)를 참고하십시오.
 
 ```
-**//** collections_config**.**json
+// collections_config.json
 [ { "name": "collectionMarbles", "policy": "OR('Org1MSP.member', 'Org2MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":1000000, "memberOnlyRead": true }, { "name": "collectionMarblePrivateDetails", "policy": "OR('Org1MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":3, "memberOnlyRead": true }
 ]
 ```
@@ -98,11 +100,12 @@ The next step in understanding how to privatize data on a channel is to build th
 
 채널에서 데이터를 개인화하는 방법을 이해하는 다음 단계는 체인코드에서 데이터 정의를 작성하는 것입니다. marbles private data 샘플은 private data를 데이터 액세스 방법에 따라 두 개의 개별 데이터 정의로 나눕니다.
 
-
+```
 *// Peers in Org1 and Org2 will have this private data in a side database***type** marble **struct** { ObjectType **string** `json:"docType"` Name **string** `json:"name"` Color **string** `json:"color"` Size **int** `json:"size"` Owner **string** `json:"owner"`
 }
 *// Only peers in Org1 will have this private data in a side database***type** marblePrivateDetails **struct** { ObjectType **string** `json:"docType"` Name **string** `json:"name"` Price **int** `json:"price"`
 }
+```
 
 Specifically access to the private data will be restricted as follows:
 
@@ -133,66 +136,105 @@ The following diagrams illustrate the private data model used by the marbles pri
 
 # **Reading collection data**
 
-Use the chaincode API `GetPrivateData()` to query private data in the database. `GetPrivateData()` takes two arguments, the **collection name**and the data key. Recall the collection `collectionMarbles` allows members of Org1 and Org2 to have the private data in a side database, and the collection `collectionMarblePrivateDetails` allows only members of Org1 to have the private data in a side database. For implementation details refer to the following two [marbles private data functions](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/marbles_chaincode_private.go):
+Use the chaincode API `GetPrivateData()` to query private data in the database. `GetPrivateData()` takes two arguments, the **collection name** and the data key. Recall the collection `collectionMarbles` allows members of Org1 and Org2 to have the private data in a side database, and the collection `collectionMarblePrivateDetails` allows only members of Org1 to have the private data in a side database. For implementation details refer to the following two [marbles private data functions](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/marbles_chaincode_private.go):
 
 체인 코드 API `GetPrivateData()`를 사용하여 데이터베이스의 private data를 쿼리하십시오. `GetPrivateData()`는 **컬렉션 이름**과 data key라는 두 개의 인수를 취합니다. `collectionMarbles` 컬렉션은 Org1 및 Org2의 멤버가 side DB에 private data를 보유 할 수 있게하고`collectionMarblePrivateDetails` 컬렉션은 Org1의 멤버만 side DB에 private data를 보유 할 수 있도록 합니다. 구현에 대한 자세한 내용은 다음 두 가지의 [marbles private data functions](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/marbles_chaincode_private.go)를 참조하십시오:
 
-
-- readMarble for querying the values of the name, color, size and owner attributesread
-- MarblePrivateDetails for querying the values of the priceattribute
+- readMarble for querying the values of the `name, color, size and owner` attributesread
+- `name, color, size and owner`를 쿼리하기 위한 readMarble 
+- MarblePrivateDetails for querying the values of the `price` attribute
+- `price`를 쿼리하기 위한 MarblePrivateDetails
 
 When we issue the database queries using the peer commands later in this tutorial, we will call these two functions.
+
+이 튜토리얼의 뒷부분에서 피어 명령을 사용하여 데이터베이스 쿼리를 할 때이 두 함수를 호출합니다.
 
 # **Writing private data**
 
 Use the chaincode API `PutPrivateData()` to store the private data into the private database. The API also requires the name of the collection. Since the marbles private data sample includes two different collections, it is called twice in the chaincode:
 
+private DB에 private data를 저장하려면 체인코드 API `PutPrivateData ()`를 사용하십시오. API에는 컬렉션 이름도 필요합니다. marbles private data 샘플에는 서로 다른 두 가지 컬렉션이 포함되어 있으므로 체인코드에서 두 번 호출됩니다.
+
 1. Write the private data `name, color, size and owner` using the collection named `collectionMarbles`.
-2. Write the private data `price` using the collection named`collectionMarblePrivateDetails`.
+1. 컬렉션 이름 `collectionMarbles`를 사용하여 private data `name, color, size and owner` 쓰기.
+2. Write the private data `price` using the collection named`collectionMarblePrivateDetails`.
+2. 컬렉션 이름 `collectionMarblePrivateDetails`를 사용하여 private data `price` 쓰기.
 
 For example, in the following snippet of the `initMarble` function,`PutPrivateData()` is called twice, once for each set of private data.
 
+```
 *// ==== Create marble object, marshal to JSON, and save to state ====*marble **:=** **&**marble{ ObjectType: "marble", Name: marbleInput.Name, Color: marbleInput.Color, Size: marbleInput.Size, Owner: marbleInput.Owner, } marbleJSONasBytes, err **:=** json.Marshal(marble) **if** err **!=** **nil** { **return** shim.Error(err.Error()) } *// === Save marble to state ===*err = stub.PutPrivateData("collectionMarbles", marbleInput.Name, marbleJSONasBytes) **if** err **!=** **nil** { **return** shim.Error(err.Error()) } *// ==== Create marble private details object with price, marshal to JSON, and save to state ====*marblePrivateDetails **:=** **&**marblePrivateDetails{ ObjectType: "marblePrivateDetails", Name: marbleInput.Name, Price: marbleInput.Price, } marblePrivateDetailsBytes, err **:=** json.Marshal(marblePrivateDetails) **if** err **!=** **nil** { **return** shim.Error(err.Error()) } err = stub.PutPrivateData("collectionMarblePrivateDetails", marbleInput.Name, marblePrivateDetailsBytes) **if** err **!=** **nil** { **return** shim.Error(err.Error()) }
+```
 
-To summarize, the policy definition above for our `collection.json` allows all peers in Org1 and Org2 to store and transact with the marbles private data `name, color, size, owner` in their private database. But only peers in Org1 can store and transact with the `price` private data in its private database.
+To summarize, the policy definition above for our `collection.json` allows all peers in Org1 and Org2 to store and transact with the marbles private data `name, color, size, owner` in their private database. But only peers in Org1 can store and transact with the `price`private data in its private database.
+
+요약하면,`collection.json`에 대한 위의 정책 정의를 통해 Org1 및 Org2의 모든 피어는 private DB에 marbles private data `name, color, size, owner`를 저장하고 트랜잭션 할 수 있습니다. 그러나 Org1의 피어만이 private DB에 private data `price`를 저장하고 트랜잭션 할 수 있습니다.
 
 As an additional data privacy benefit, since a collection is being used, only the private data hashes go through orderer, not the private data itself, keeping private data confidential from orderer.
+
+컬렉션을 통한 추가적인 데이터 개인정보보호 장점으로, private data 자체가 아닌 private data 해시만 orderer를 통과하므로 orderer에게 private data의 기밀성을 유지합니다.
 
 # **Start the network**
 
 Now we are ready to step through some commands which demonstrate how to use private data.
 
+이제 private data 사용을 증명하는 몇가지 명령을 단계별로 진행 할 준비가 되었습니다.
+
 **Try it yourself**
 
 Before installing, defining, and using the marbles private data chaincode below, we need to start the BYFN network. For the sake of this tutorial, we want to operate from a known initial state. The following command will kill any active or stale docker containers and remove previously generated artifacts. Therefore let’s run the following command to clean up any previous environments:
 
-cd fabric**-**samples**/**first**-**network
-**./**byfn**.**sh down
+아래의 marbles private data 체인코드를 설치, 정의 및 사용하기 전에 BYFN 네트워크를 시작해야합니다. 이 튜토리얼을 위해 초기 상태에서 작동하려고합니다. 다음 명령은 활성 또는 오래된 도커 컨테이너를 종료하고 이전에 생성 된 아티팩트를 제거합니다. 따라서 다음 명령을 실행하여 이전 환경을 정리하십시오.
+
+```
+cd fabric-samples/first-network
+./byfn.sh down
+```
 
 If you’ve already run through this tutorial, you’ll also want to delete the underlying docker containers for the marbles private data chaincode. Let’s run the following commands to clean up previous environments:
 
+이 튜토리얼을 이미 완료 한 경우 marbles private data 체인코드의 기본 도커 컨테이너를 삭제하려고합니다. 다음 명령을 실행하여 이전 환경을 정리하십시오.
+
+```
 docker rm -f $(docker ps -a | awk '($2 ~ /dev-peer.*.marblesp.*/) {print $1}')
 docker rmi -f $(docker images | awk '($1 ~ /dev-peer.*.marblesp.*/) {print $3}')
+```
 
 Start up the BYFN network with CouchDB by running the following command:
 
-**./**byfn**.**sh up **-**c mychannel **-**s couchdb
+다음 명령을 실행하여 CouchDB와 함께 BYFN 네트워크를 시작하십시요.
+
+```
+./byfn.sh up -c mychannel -s couchdb
+```
 
 This will create a simple Fabric network consisting of a single channel named `mychannel` with two organizations (each maintaining two peer nodes) and an ordering service while using CouchDB as the state database. Either LevelDB or CouchDB may be used with collections. CouchDB was chosen to demonstrate how to use indexes with private data.
+
+이것은 CouchDB를 state DB로 사용하면서 2개의 조직(각각 2개의 피어노드 유지)과 ordering 서비스를 가진 `mychannel`이라는 단일 채널로 구성된 간단한 Fabric 네트워크를 생성합니다. LevelDB 또는 CouchDB를 컬렉션과 함께 사용할 수 있습니다. CouchDB는 private data와 함께 인덱스를 사용하는 방법을 보여주기 위해 선택되었습니다.
 
 **Note**
 
 For collections to work, it is important to have cross organizational gossip configured correctly. Refer to our documentation on [Gossip data dissemination protocol](https://hyperledger-fabric.readthedocs.io/en/latest/gossip.html), paying particular attention to the section on “anchor peers”. Our tutorial does not focus on gossip given it is already configured in the BYFN sample, but when configuring a channel, the gossip anchors peers are critical to configure for collections to work properly.
 
+**Note**
+
+컬렉션이 작동하려면 조직 간 gossip을 올바르게 구성해야합니다. "anchor peers"섹션에 특히 주의를 기울이고 [Gossip data dissemination protocol](https://hyperledger-fabric.readthedocs.io/en/latest/gossip.html)에 대한 설명서를 참조하십시오. 이 튜토리얼은 BYFN 샘플에서 이미 구성된 gossip에 중점을 두지 않지만 채널을 구성 할 때 gossip anchors peers는 컬렉션이 제대로 작동하도록 구성하는데 중요합니다.
+
 # **Install and define a chaincode with a collection**
 
 Client applications interact with the blockchain ledger through chaincode. Therefore we need to install a chaincode on every peer that will execute and endorse our transactions. However, before we can interact with our chaincode, the members of the channel need to agree on a chaincode definition that establishes chaincode governance, including the private data collection configuration. We are going to package, install, and then define the chaincode on the channel using [peer lifecycle chaincode](https://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html).
+
+클라이언트 응용프로그램은 체인코드를 통해 블록체인 원장과 상호작용합니다. 따라서 트랜잭션을 실행하고 보증 할 모든 피어에 체인코드를 설치해야합니다. 그러나 체인코드와 상호작용하려면 채널 구성원이 PDC 구성을 포함하여 체인코드 거버넌스를 설정하는 체인코드 정의에 동의해야합니다. [peer lifecycle chaincode](https://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html)를 사용하여 채널에서 체인코드를 패키징, 설치 및 정의하려고합니다.
 
 # **Install chaincode on all peers**
 
 The chaincode needs to be packaged before it can be installed on our peers. We can use the [peer lifecycle chaincode package](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-package) command to package the marbles chaincode.
 
+피어에 체인코드를 설치하기 전에 체인코드를 패키지해야합니다. '[peer lifecycle chaincode package](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-package) 명령을 사용하여 marbles 체인코드를 패키징 할 수 있습니다.
+
 The BYFN network includes two organizations, Org1 and Org2, with two peers each. Therefore, the chaincode package has to be installed on four peers:
+
+BYFN 네트워크에는 각각 2개의 피어가 있는 Org1 및 Org2의 두 조직이 있습니다. 따라서 체인코드 패키지는 4개의 피어에 설치해야합니다.
 
 - peer0.org1.example.com
 - peer1.org1.example.com
@@ -201,23 +243,43 @@ The BYFN network includes two organizations, Org1 and Org2, with two peers each.
 
 After the chaincode is packaged, we can use the [peer lifecycle chaincode install](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-install) command to install the Marbles chaincode on each peer.
 
+체인코드 패키징 후 [peer lifecycle chaincode install](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-install) 명령으로 각 피어에 Marbles 체인코드를 설치합니다.
+
 **Try it yourself**
 
 Assuming you have started the BYFN network, enter the CLI container:
 
+BYFN 네트워크를 시작했다는 가정하에 CLI 컨테이너를 실행합니다:
+
+```
 docker exec **-**it cli bash
+```
 
 Your command prompt will change to something similar to:
 
-bash**-**4.4*#*
+명령 프롬프트가 다음과 비슷하게 변경됩니다:
+
+```
+bash-4.4#
+```
 
 1. Use the following command to package the marbles private data chaincode from the git repository inside your local container.
 
-peer lifecycle chaincode package marblesp**.**tar**.**gz **--**path github**.**com**/**hyperledger**/**fabric**-**samples**/**chaincode**/**marbles02_private**/**go**/** **--**lang golang **--**label marblespv1
+1. 다음 명령을 사용하여 로컬 컨테이너 내의 git repository에서 marbles private data 체인코드를 패키지하십시오.
+
+```
+peer lifecycle chaincode package marblesp.tar.gz --path github.com/hyperledger/fabric-samples/chaincode/marbles02_private/go/ --lang golang --label marblespv1
+```
 
 This command will create a chaincode package named marblesp.tar.gz.
 
+이 명령은 marblesp.tar.gz라는 이름의 체인코드 패키지를 생성합니다.
+
 2. Use the following command to install the chaincode package onto the peer `peer0.org1.example.com` in your BYFN network. By default, after starting the BYFN network, the active peer is set to`CORE_PEER_ADDRESS=peer0.org1.example.com:7051`:
+
+
+
+
 
 peer lifecycle chaincode install marblesp**.**tar**.**gz
 
