@@ -60,7 +60,7 @@ A collection definition is composed of the following properties:
 
 - `blockToLive`: For very sensitive information such as pricing or personal information, this value represents how long the data should live on the private database in terms of blocks. The data will live for this specified number of blocks on the private database and after that it will get purged, making this data obsolete from the network. To keep private data indefinitely, that is, to never purge private data, set the `blockToLive` property to `0`.
 
--`blockToLive` : 가격 또는 개인 정보와 같은 매우 민감한 정보의 경우 이 값은 데이터가 private DB에 블록 단위로 얼마나 오래 있어야하는지 나타냅니다. 데이터는 private DB에서 이 지정된 수의 블록에 대해 존재하며 그 후에는 데이터가 제거되어 네트워크에서 사용되지 않습니다. private data를 무기한으로 유지하려면, 즉 절대로 삭제하지 않으려면 `blockblockToLive` 속성을 `0`으로 설정하십시오.
+- `blockToLive` : 가격 또는 개인 정보와 같은 매우 민감한 정보의 경우 이 값은 데이터가 private DB에 블록 단위로 얼마나 오래 있어야하는지 나타냅니다. 데이터는 private DB에서 이 지정된 수의 블록에 대해 존재하며 그 후에는 데이터가 제거되어 네트워크에서 사용되지 않습니다. private data를 무기한으로 유지하려면, 즉 절대로 삭제하지 않으려면 `blockblockToLive` 속성을 `0`으로 설정하십시오.
 
 - `memberOnlyRead`: a value of `true` indicates that peers automatically enforce that only clients belonging to one of the collection member organizations are allowed read access to private data.
 - `memberOnlyRead` : `true` 값은 피어가 컬렉션 멤버 조직 중 하나에 속하는 클라이언트만 private data에 대한 읽기 액세스를 허용하도록 자동으로 적용함을 나타냅니다.
