@@ -12,7 +12,7 @@ The information in this tutorial assumes knowledge of private data stores and th
 
 These instructions use the new Fabric chaincode lifecycle introduced in the Fabric v2.0 Alpha release. If you would like to use the previous lifecycle model to use private data with chaincode, visit the v1.4 version of the [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html).
 
-**Note**
+**주기**
 
 이 자료는 Fabric v2.0 Alpha에 도입 된 새로운 fabric 체인코드 라이프 사이클을 사용합니다. 이전 라이프 사이클 모델을 사용하여 체인코드와 함께 private data를 사용하려면 v1.4 버전의 [Using Private Data in Fabric tutorial](https://hyperledger-fabric.readthedocs.io/en/release-1.4/private_data_tutorial.html)을 확인하십시오.
 
@@ -277,138 +277,226 @@ This command will create a chaincode package named marblesp.tar.gz.
 
 2. Use the following command to install the chaincode package onto the peer `peer0.org1.example.com` in your BYFN network. By default, after starting the BYFN network, the active peer is set to`CORE_PEER_ADDRESS=peer0.org1.example.com:7051`:
 
+2. 다음 명령을 사용하여 BYFN 네트워크의 `peerorgpeer0.org1.example.com`에 체인코드 패키지를 설치하십시오. BYFN 네트워크를 시작한 후 기본적으로 활성 피어는 `CORE_PEER_ADDRESS = peer0.org1.example.com : 7051`으로 설정됩니다:
 
-
-
-
-peer lifecycle chaincode install marblesp**.**tar**.**gz
+```
+peer lifecycle chaincode install marblesp.tar.gz
+```
 
 A successful install command will return the chaincode identifier, similar to the response below:
 
-2019**-**04**-**22 19:09:04.336 UTC [cli**.**lifecycle**.**chaincode] submitInstallProposal **->** INFO 001 Installed remotely: response:**<**status:200 payload:"\nKmarblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd\022\nmarblespv1" **>**2019**-**04**-**22 19:09:04.336 UTC [cli**.**lifecycle**.**chaincode] submitInstallProposal **->** INFO 002 Chaincode code package identifier: marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd
+성공적인 설치 명령은 아래 응답과 유사한 체인코드를 반환합니다.
+
+```
+2019-04-22 19:09:04.336 UTC [cli.lifecycle.chaincode] submitInstallProposal -> INFO 001 Installed remotely: response:<status:200 payload:"\nKmarblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd\022\nmarblespv1" >
+2019-04-22 19:09:04.336 UTC [cli.lifecycle.chaincode] submitInstallProposal -> INFO 002 Chaincode code package identifier: marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd
+```
 
 3. Use the CLI to switch the active peer to the second peer in Org1 and install the chaincode. Copy and paste the following entire block of commands into the CLI container and run them:
 
-export CORE_PEER_ADDRESS**=**peer1**.**org1**.**example**.**com:8051
-peer lifecycle chaincode install marblesp**.**tar**.**gz
+3. CLI를 사용하여 Org1에서 활성 피어를 두 번째 피어로 전환하고 체인코드를 설치하십시오. 다음 전체 명령 블록을 복사하여 CLI 컨테이너에 붙여넣고 실행하십시오.
+
+```
+export CORE_PEER_ADDRESS=peer1.org1.example.com:8051
+peer lifecycle chaincode install marblesp.tar.gz
+```
 
 4. Use the CLI to switch to Org2. Copy and paste the following block of commands as a group into the peer container and run them all at once:
 
+4. CLI를 사용하여 Org2로 전환하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
+
+```
 export CORE_PEER_LOCALMSPID=Org2MSP
 export PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
 export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+```
 
-1. Switch the active peer to the first peer in Org2 and install the chaincode:
+5. Switch the active peer to the first peer in Org2 and install the chaincode:
 
-export CORE_PEER_ADDRESS**=**peer0**.**org2**.**example**.**com:9051
-peer lifecycle chaincode install marblesp**.**tar**.**gz
+5. 활성 피어를 Org2의 첫 번째 피어로 전환하고 체인 코드를 설치하십시오.
 
-1. Switch the active peer to the second peer in org2 and install the chaincode:
+```
+export CORE_PEER_ADDRESS=peer0.org2.example.com:9051
+peer lifecycle chaincode install marblesp.tar.gz
+```
 
-export CORE_PEER_ADDRESS**=**peer1**.**org2**.**example**.**com:10051
-peer lifecycle chaincode install marblesp**.**tar**.**gz
+6. Switch the active peer to the second peer in org2 and install the chaincode:
+
+6. 활성 피어를 org2의 두 번째 피어로 전환하고 체인 코드를 설치하십시오.
+
+```
+export CORE_PEER_ADDRESS=peer1.org2.example.com:10051
+peer lifecycle chaincode install marblesp.tar.gz
+```
 
 # **Approve the chaincode definition**
 
 Each channel member that wants to use the chaincode needs to approve a chaincode definition for their organization. Since both organizations are going to use the chaincode in this tutorial, we need to approve the chaincode definition for both Org1 and Org2.
 
+체인코드를 사용하려는 각 채널 구성원은 해당 조직의 체인코드 정의를 승인해야합니다. 이 튜토리얼에서는 두 조직 모두 체인코드를 사용하므로 Org1 및 Org2에 대한 체인코드 정의를 승인해야합니다.
+
 The chaincode definition includes the package identifier that was returned by the install command. This packege ID is used to associate the chaincode package installed on your peers with the chaincode definition approved by your organization. We can also use the [peer lifecycle chaincode queryinstalled](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-queryinstalled) command to find the package ID of `marblesp.tar.gz`.
 
+체인코드 정의에는 install 명령으로 반환 된 패키지 식별자가 포함됩니다. 이 패키지 ID는 피어에 설치된 체인코드 패키지를 조직에서 승인 한 체인코드 정의와 연결하는데 사용됩니다. [peer lifecycle chaincode queryinstalled](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-queryinstalled) 명령을 사용하여의 패키지 ID `marblesp.tar.gz`를 찾을 수도 있습니다. 
+
 Once we have the package ID, we can then use the [peer lifecycle chaincode approveformyorg](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-approveformyorg) command to approve a definition of the marbles chaincode for Org1 and Org2. To approve the private data collection definition that accompanies the `marbles02_private`, sample, provide the path to the collections JSON file using the`--collections-config` flag.
+
+패키지 ID를 확보 한 후에는 [[peer lifecycle chaincode approveformyorg](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-approveformyorg) 명령을 사용하여 Org1 및 Org2에 대한 marbles 체인코드의 정의를 보증합니다. `marbles02_private` 샘플과 함께 제공되는 PDC 정의를 승인하려면`--collections-config` flag를 사용하여 콜렉션 JSON 파일의 경로를 제공하십시오.
 
 **Try it yourself**
 
 Run the following commands inside the CLI container to approve a definition for Org1 and Org2.
 
+CLI 컨테이너 내에서 다음 명령을 실행하여 Org1 및 Org2에 대한 정의를 승인하십시오.
+
 1. Use the following command to query your peer for the package ID of the installed chaincode.
 
+1. 다음 명령을 사용하여 피어에 설치된 체인 코드의 패키지 ID를 쿼리하십시오.
+
+```
 peer lifecycle chaincode queryinstalled
+```
 
 The command will return the same package identifier as the install command. You should see output similar to the following:
 
+이 명령은 설치 명령과 동일한 패키지 식별자를 반환합니다. 다음과 유사한 출력이 표시되어야합니다.
+
+```
 Installed chaincodes on peer:
 Package ID: marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd, Label: marblespv1
 Package ID: mycc_1:27ef99cb3cbd1b545063f018f3670eddc0d54f40b2660b8f853ad2854c49a0d8, Label: mycc_1
+```
 
 2. Declare the package ID as an environment variable. Paste the package ID of marblespv1 returned by the `peer lifecycle chaincode queryinstalled` into the command below. The package ID may not be the same for all users, so you need to complete this step using the package ID returned from your console.
 
-export CC_PACKAGE_ID**=**marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd
+2. 패키지 ID를 환경 변수로 선언하십시오. `peer lifecycle chaincode queryinstalled`에서 반환 한 marblespv1의 패키지 ID를 아래 명령에 붙여 넣습니다. 패키지 ID가 모든 사용자에게 동일하지 않을 수 있으므로 콘솔에서 반환 된 패키지 ID를 사용하여이 단계를 완료해야합니다.
+
+```
+export CC_PACKAGE_ID=marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98280f5eae6d59c1cd
+```
 
 3. Make sure we are running the CLI as Org1. Copy and paste the following block of commands as a group into the peer container and run them all at once:
 
+3. CLI를 Org1로 실행하고 있는지 확인하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
+
+```
 export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
 export CORE_PEER_LOCALMSPID=Org1MSP
 export PEER0_ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
 export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+```
 
 4. Use the following command to approve a definition of the marbles private data chaincode for Org1. This command includes a path to the collection definition file. The approval is distributed within each organization using gossip, so the command does not need to target every peer within an organization.
 
+4. 다음 명령을 사용하여 Org1에 대한 marbles private data 체인코드의 정의를 승인하십시오. 이 명령에는 컬렉션 정의 파일의 경로가 포함됩니다. 승인은 gossip을 사용하여 각 조직 내에 배포되므로 이 명령은 조직 내의 모든 피어를 대상으로 지정할 필요가 없습니다.
+
+```
 export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 peer lifecycle chaincode approveformyorg --channelID mychannel --name marblesp --version 1.0 --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json --signature-policy "OR('Org1MSP.member','Org2MSP.member')" --init-required --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile $ORDERER_CA
-
+```
 When the command completes successfully you should see something similar to:
 
-2019**-**03**-**18 16:04:09.046 UTC [cli**.**lifecycle**.**chaincode] InitCmdFactory **->** INFO 001 Retrieved channel (mychannel) orderer endpoint: orderer**.**example**.**com:7050
-2019**-**03**-**18 16:04:11.253 UTC [chaincodeCmd] ClientWait **->** INFO 002 txid [efba188ca77889cc1c328fc98e0bb12d3ad0abcda3f84da3714471c7c1e6c13c] committed **with** status (VALID) at
+명령이 성공적으로 완료되면 다음과 비슷한 내용이 표시됩니다:
+
+```
+2019-03-18 16:04:09.046 UTC [cli.lifecycle.chaincode] InitCmdFactory -> INFO 001 Retrieved channel (mychannel) orderer endpoint: orderer.example.com:7050
+2019-03-18 16:04:11.253 UTC [chaincodeCmd] ClientWait -> INFO 002 txid [efba188ca77889cc1c328fc98e0bb12d3ad0abcda3f84da3714471c7c1e6c13c] committed with status (VALID) at
+```
 
 5. Use the CLI to switch to Org2. Copy and paste the following block of commands as a group into the peer container and run them all at once.
 
+5. CLI를 사용하여 Org2로 전환하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
+
+```
 export CORE_PEER_ADDRESS=peer0.org2.example.com:9051
 export CORE_PEER_LOCALMSPID=Org2MSP
 export PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
 export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+```
 
-1. You can now approve the chaincode definition for Org2:
+6. You can now approve the chaincode definition for Org2:
 
+6. 이제 Org2에 대한 체인 코드 정의를 승인 할 수 있습니다.
+
+```
 peer lifecycle chaincode approveformyorg --channelID mychannel --name marblesp --version 1.0 --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json --signature-policy "OR('Org1MSP.member','Org2MSP.member')" --init-required --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile $ORDERER_CA
+```
 
 # **Commit the chaincode definition**
 
 Once a sufficient number of organizations (in this case, a majority) have approved a chaincode definition, one organization commit the definition to the channel.
 
+충분한 수의 조직(이 경우 과반수)이 체인코드 정의를 승인하면 한 조직이 정의를 채널에 커밋합니다.
+
 Use the [peer lifecycle chaincode commit](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-commit) command to commit the chaincode definition. This command needs to target the peers in Org1 and Org2 to collect endorsements for the commit transaction. The peers will endorse the transaction only if their organizations have approved the chaincode definition. This command will also deploy the collection definition to the channel.
 
+체인코드 정의를 커밋하려면 [peer lifecycle chaincode commit](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerlifecycle.html#peer-lifecycle-chaincode-commit) 명령을 사용하십시오. 이 명령은 커밋 트랜잭션에 대한 승인을 수집하기 위해 Org1 및 Org2의 피어를 대상으로해야합니다. 동료는 조직이 체인코드 정의를 승인 한 경우에만 거래를 승인합니다. 이 명령은 또한 컬렉션 정의를 채널에 배포합니다.
+
 We are ready to use the chaincode after the chaincode definition has been committed to the channel. Because the marbles private data chaincode contains an initiation function, we need to use the [peer chaincode invoke](http://hyperledger-fabric.readthedocs.io/en/master/commands/peerchaincode.html?%20chaincode%20instantiate#peer-chaincode-instantiate) command to invoke `Init()` before we can use other functions in the chaincode.
+
+체인코드 정의가 채널에 커밋 된 후 체인코드를 사용할 준비가되었습니다. marbles private data 체인코드에는 초기화 기능이 포함되어 있기 때문에 체인코드의 다른 기능을 사용하기 전에 [peer chaincode invoke](http://hyperledger-fabric.readthedocs.io/en/master/commands/peerchaincode.html?%20chaincode%20instantiate#peer-chaincode-instantiate) 명령을 사용하여 `InInit()`를 호출합니다.
 
 **Try it yourself**
 
 1. Run the following commands to commit the definition of the marbles private data chaincode to the BYFN channel `mychannel`.
 
+1. 다음 명령을 실행하여 marbles private data 체인코드의 정의를 BYFN 채널 `mychannel`에 커밋합니다.
+
+```
 export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem export ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt export ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt peer lifecycle chaincode commit -o orderer.example.com:7050 --channelID mychannel --name marblesp --version 1.0 --sequence 1 --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json --signature-policy "OR('Org1MSP.member','Org2MSP.member')" --init-required --tls true --cafile $ORDERER_CA --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles $ORG1_CA --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles $ORG2_CA
 .. note:: When specifying the value of the ``--collections-config`` flag, you will need to specify the fully qualified path to the collections_config.json file. For example: .. code:: bash --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json
 When the commit transaction completes successfully you should see something
 similar to:
 .. code:: bash [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+```
 
-2. Use the following command to invoke the `Init` function to initialize the chaincode:
+2. Use the following command to invoke the `Init` function to initialize the chaincode:
 
+2. 다음 명령을 사용하여 `Init` 함수를 호출하여 체인코드를 초기화하십시오.
+
+```
 peer chaincode invoke -o orderer.example.com:7050 --channelID mychannel --name marblesp --isInit --tls true --cafile $ORDERER_CA --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles $ORG1_CA -c '{"Args":["Init"]}'
+```
 
 # **Store private data**
 
 Acting as a member of Org1, who is authorized to transact with all of the private data in the marbles private data sample, switch back to an Org1 peer and submit a request to add a marble:
 
+marbles private data 샘플의 모든 private data를 처리 할 수있는 권한이 있는 Org1의 구성원으로 작동하여 Org1 피어로 다시 전환하고 marble 추가 요청을 제출하십시오.
+
 **Try it yourself**
 
 Copy and paste the following set of commands to the CLI command line.
 
-export CORE_PEER_ADDRESS**=**peer0**.**org1**.**example**.**com:7051
-export CORE_PEER_LOCALMSPID**=**Org1MSP
-export CORE_PEER_TLS_ROOTCERT_FILE**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**peers**/**peer0**.**org1**.**example**.**com**/**tls**/**ca**.**crt
-export CORE_PEER_MSPCONFIGPATH**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**users**/**Admin@org1**.**example**.**com**/**msp
-export PEER0_ORG1_CA**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**peers**/**peer0**.**org1**.**example**.**com**/**tls**/**ca**.**crt
+다음 명령 세트를 복사하여 CLI 명령행에 붙여 넣으십시오.
+
+```
+export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+export CORE_PEER_LOCALMSPID=Org1MSP
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export PEER0_ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+```
 
 Invoke the marbles `initMarble` function which creates a marble with private data — name `marble1` owned by `tom` with a color `blue`, size `35`and price of `99`. Recall that private data **price** will be stored separately from the private data **name, owner, color, size**. For this reason, the `initMarble` function calls the `PutPrivateData()` API twice to persist the private data, once for each collection. Also note that the private data is passed using the `--transient` flag. Inputs passed as transient data will not be persisted in the transaction in order to keep the data private. Transient data is passed as binary data and therefore when using CLI it must be base64 encoded. We use an environment variable to capture the base64 encoded value, and use `tr` command to strip off the problematic newline characters that linux base64 command adds.
 
+private data가 있는 marbles `initmarble` 기능을 호출합니다. 이름은 `marble1` 소유자 `Tom` 색상은 `blue`, 사이즈는 `35`, 가격은 `99`입니다. private data **price**은 private data **name, owner, color, size**와 별도로 저장됩니다. 이러한 이유로, `initMarble' 함수는 'PutPrivateData()` API를 두 번 호출하여 private data를 각 컬렉션마다 한 번씩 유지합니다. 또한 private data는 `--transient` flag를 사용하여 전달됩니다. 임시 데이터로 전달 된 입력은 데이터를 개인용으로 유지하기 위해 트랜잭션에서 유지되지 않습니다. 임시 데이터는 이진 데이터로 전달되므로 CLI를 사용할 때는 base64로 인코딩해야합니다. 환경변수를 사용하여 base64로 인코딩 된 값을 캡처하고 `tr` 명령을 사용하여 줄바꿈 문자를 제거합니다.
+
+```
 export MARBLE=$(echo -n "{\"name\":\"marble1\",\"color\":\"blue\",\"size\":35,\"owner\":\"tom\",\"price\":99}" | base64 | tr -d \\n)
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n marblesp -c '{"Args":["initMarble"]}' --transient "{\"marble\":\"$MARBLE\"}"
+```
 
 You should see results similar to:
 
+다음과 유사한 결과가 나타납니다:
+
+```
 > [chaincodeCmd] chaincodeInvokeOrQuery->INFO 001 Chaincode invoke successful. result: status:200
+```
 
 # **Query the private data as an authorized peer**
 
