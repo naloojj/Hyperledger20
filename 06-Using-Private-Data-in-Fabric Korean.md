@@ -502,105 +502,174 @@ You should see results similar to:
 
 Our collection definition allows all members of Org1 and Org2 to have the `name, color, size, owner` private data in their side database, but only peers in Org1 can have the `price` private data in their side database. As an authorized peer in Org1, we will query both sets of private data.
 
+우리의 컬렉션 정의는 Org1과 Org2의 모든 구성원이 side DB에 '`name, color, size, owner` private data를 가질 수 있도록 허용하지만 Org1의 피어 만 side DB에 `price` private data를 가질 수 있습니다. Org1의 승인 된 피어로서 두 private data 세트를 모두 쿼리합니다.
+
 The first `query` command calls the `readMarble` function which passes`collectionMarbles` as an argument.
 
-*// ===============================================// readMarble - read a marble from chaincode state// ===============================================***func** (t *****SimpleChaincode) readMarble(stub shim.ChaincodeStubInterface, args []**string**) pb.Response { **var** name, jsonResp **stringvar** err **errorif** len(args) **!=** 1 { **return** shim.Error("Incorrect number of arguments. Expecting name of the marble to query") } name = args[0] valAsbytes, err **:=** stub.GetPrivateData("collectionMarbles", name) *//get the marble from chaincode state***if** err **!=** **nil** { jsonResp = "{\"Error\":\"Failed to get state for " **+** name **+** "\"}" **return** shim.Error(jsonResp) } **else** **if** valAsbytes **==** **nil** { jsonResp = "{\"Error\":\"Marble does not exist: " **+** name **+** "\"}" **return** shim.Error(jsonResp) } **return** shim.Success(valAsbytes)
+첫 번째 `query` 명령은 `collectionMarbles`를 인수로 전달하는 `readMarble` 함수를 호출합니다.
+
+```
+// ===============================================// readMarble - read a marble from chaincode state// ===============================================func (t SimpleChaincode) readMarble(stub shim.ChaincodeStubInterface, args []string) pb.Response { var name, jsonResp stringvar err errorif len(args) != 1 { return shim.Error("Incorrect number of arguments. Expecting name of the marble to query") } name = args[0] valAsbytes, err := stub.GetPrivateData("collectionMarbles", name) //get the marble from chaincode stateif err != nil { jsonResp = "{\"Error\":\"Failed to get state for " + name + "\"}" return shim.Error(jsonResp) } else if valAsbytes == nil { jsonResp = "{\"Error\":\"Marble does not exist: " + name + "\"}" return shim.Error(jsonResp) } return shim.Success(valAsbytes)
 }
+```
 
 The second `query` command calls the `readMarblePrivateDetails` function which passes `collectionMarblePrivateDetails` as an argument.
 
+두 번째 `query` 명령은 `collectionMarblePrivateDetails` 인수를 전달하는 `readMarblePrivateDetails` 함수를 호출합니다.
+
+```
 *// ===============================================// readMarblePrivateDetails - read a marble private details from chaincode state// ===============================================***func** (t *****SimpleChaincode) readMarblePrivateDetails(stub shim.ChaincodeStubInterface, args []**string**) pb.Response { **var** name, jsonResp **stringvar** err **errorif** len(args) **!=** 1 { **return** shim.Error("Incorrect number of arguments. Expecting name of the marble to query") } name = args[0] valAsbytes, err **:=** stub.GetPrivateData("collectionMarblePrivateDetails", name) *//get the marble private details from chaincode state***if** err **!=** **nil** { jsonResp = "{\"Error\":\"Failed to get private details for " **+** name **+** ": " **+** err.Error() **+** "\"}" **return** shim.Error(jsonResp) } **else** **if** valAsbytes **==** **nil** { jsonResp = "{\"Error\":\"Marble private details does not exist: " **+** name **+** "\"}" **return** shim.Error(jsonResp) } **return** shim.Success(valAsbytes)
 }
+```
 
 Now **Try it yourself**
 
 Query for the `name, color, size and owner` private data of `marble1` as a member of Org1. Note that since queries do not get recorded on the ledger, there is no need to pass the marble name as a transient input.
 
-peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarble","marble1"]}'
+`marble1`의 `name, color, size and owner`의 private data를 Org1의 구성원으로 쿼리합니다. 쿼리는 원장에 기록되지 않으므로 marble 이름을 임시 입력으로 전달할 필요가 없습니다.
+
+```
+peer chaincode query **-**C mychannel **-**n marblesp *p*-**c '{"Args":["readMarble","marble1"]}'
+```
 
 You should see the following result:
 
+다음과 같은 결과가 나타납니다:
+
+```
 {"color":"blue","docType":"marble","name":"marble1","owner":"tom","size":35}
+```
 
 Query for the `price` private data of `marble1` as a member of Org1.
 
+`marble1`의 `price` private data를 Org1의 구성원으로 쿼리합니다.
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 You should see the following result:
 
+다음과 같은 결과가 나타납니다:
+
+```
 {"docType":"marblePrivateDetails","name":"marble1","price":99}
+```
 
 # **Query the private data as an unauthorized peer**
 
 Now we will switch to a member of Org2 which has the marbles private data `name, color, size, owner` in its side database, but does not have the marbles `price` private data in its side database. We will query for both sets of private data.
 
+이제 side DB에 marbles private data `name, color, size, owner`가 있지만 조직 데이터베이스에 marbles `price` private data가 없는 Org2 멤버로 전환합니다. 두 private data 세트를 모두 쿼리합니다.
+
 # **Switch to a peer in Org2**
 
 From inside the docker container, run the following commands to switch to the peer which is unauthorized to access the marbles `price` private data.
 
+도커 컨테이너 내부에서 다음 명령을 실행하여 marbles `price` private data에 액세스 권한이 없는 피어로 전환하십시오.
+
 **Try it yourself**
 
+```
 export CORE_PEER_ADDRESS=peer0.org2.example.com:9051
 export CORE_PEER_LOCALMSPID=Org2MSP
 export PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
 export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+```
 
 # **Query private data Org2 is authorized to**
 
 Peers in Org2 should have the first set of marbles private data (`name, color, size and owner`) in their side database and can access it using the `readMarble()` function which is called with the `collectionMarbles` argument.
 
+Org2의 피어는 첫 번째 marbles private data (`name, color, size and owner`)를 side DB에 가져야하며 `collectionMarbles` 인수로 호출되는`readMarble()` 함수를 사용하여 액세스 할 수 있습니다.
+
 **Try it yourself**
 
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarble","marble1"]}'
+```
 
 You should see something similar to the following result:
 
+다음과 같은 결과가 나타납니다:
+
+```
 {"docType":"marble","name":"marble1","color":"blue","size":35,"owner":"tom"}
+```
 
 # **Query private data Org2 is not authorized to**
 
 Peers in Org2 do not have the marbles `price` private data in their side database. When they try to query for this data, they get back a hash of the key matching the public state but will not have the private state.
 
+Org2의 피어는 side DB에 marbles `price` 정보가 없습니다. 이 데이터를 쿼리하려고 하면 public state와 일치하는 키의 해시를 얻지만 private state는 갖지 않습니다.
+
 **Try it yourself**
 
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 You should see a result similar to:
 
+다음과 같은 결과가 나타납니다:
+
+```
 {"Error":"Failed to get private details for marble1: GET_STATE failed:
 transaction ID: b04adebbf165ddc90b4ab897171e1daa7d360079ac18e65fa15d84ddfebfae90:
 Private data matching public hash version **is** **not** available**.** Public hash
 version **=** **&**version**.**Height{BlockNum:0x6, TxNum:0x0}, Private data version **=**(*****version**.**Height)(nil)"}
+```
 
 Members of Org2 will only be able to see the public hash of the private data.
+
+Org2 구성원은 private data의 공개 해시만 볼 수 있습니다.
 
 # **Purge Private Data**
 
 For use cases where private data only needs to be on the ledger until it can be replicated into an off-chain database, it is possible to “purge” the data after a certain set number of blocks, leaving behind only hash of the data that serves as immutable evidence of the transaction.
 
+private data가 off-chain DB로 복제 될 때까지 원장에만 있어야하는 사용 사례의 경우 특정 블록 수 이후에 데이터를 "퍼지"하여 데이터의 해시만 남길 수 있으며 트랜잭션의 불변 증거로 사용됩니다.
+
 There may be private data including personal or confidential information, such as the pricing data in our example, that the transacting parties don’t want disclosed to other organizations on the channel. Thus, it has a limited lifespan, and can be purged after existing unchanged on the blockchain for a designated number of blocks using the `blockToLive`property in the collection definition.
+
+거래 당사자가 채널의 다른 조직에 공개하고 싶지 않은 위 예의 가격 데이터와 같은 개인 정보 또는 기밀 정보를 포함한 private data가 있을 수 있습니다. 따라서 수명이 제한되어 있으며 컬렉션 정의에서 `blockToLive` 속성을 사용하여 지정된 수의 블록에 대해 블록체인에서 제거 할 수 있습니다.
 
 Our `collectionMarblePrivateDetails` definition has a `blockToLive`property value of three meaning this data will live on the side database for three blocks and then after that it will get purged. Tying all of the pieces together, recall this collection definition`collectionMarblePrivateDetails` is associated with the `price` private data in the `initMarble()` function when it calls the `PutPrivateData()` API and passes the `collectionMarblePrivateDetails` as an argument.
 
+우리의 `collectionMarblePrivateDetails` 정의에서 `blockToLive` 속성 값 3의 의미는 이 데이터가 3개의 블록 동안 side DB에 존재하고 그 후에 제거 될 것임을 의미합니다. 모든 조각들을 하나로 묶어이 컬렉션 정의 `collectionMarblePrivateDetails`는 `PutPrivateData()`API를 호출하고 인수로 `collectionMarblePrivateDetails`를 전달할 때 `initMarble()` 함수의 `price` private data와 관련이 있습니다. .
+
 We will step through adding blocks to the chain, and then watch the price information get purged by issuing four new transactions (Create a new marble, followed by three marble transfers) which adds four new blocks to the chain. After the fourth transaction (third marble transfer), we will verify that the price private data is purged.
+
+우리는 체인에 블록을 추가하는 단계를 거쳐 체인에 4개의 새로운 블록을 추가하는 4개의 새로운 트랜잭션(새로운 marble 생성, 3개의 marble 전송)을 발행하여 가격 정보가 제거되는 것을 지켜 볼 것입니다. 네 번째 트랜잭션(세 번째 marble 이전) 후 private data 가격이 제거되었는지 확인합니다.
 
 **Try it yourself**
 
 Switch back to peer0 in Org1 using the following commands. Copy and paste the following code block and run it inside your peer container:
 
+다음 명령을 사용하여 Org1에서 peer0으로 다시 전환하십시오. 다음 코드 블록을 복사하여 붙여 넣고 피어 컨테이너 내에서 실행하십시오.
+
+```
 export CORE_PEER_ADDRESS**=**peer0**.**org1**.**example**.**com:7051
 export CORE_PEER_LOCALMSPID**=**Org1MSP
 export CORE_PEER_TLS_ROOTCERT_FILE**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**peers**/**peer0**.**org1**.**example**.**com**/**tls**/**ca**.**crt
 export CORE_PEER_MSPCONFIGPATH**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**users**/**Admin@org1**.**example**.**com**/**msp
 export PEER0_ORG1_CA**=/**opt**/**gopath**/**src**/**github**.**com**/**hyperledger**/**fabric**/**peer**/**crypto**/**peerOrganizations**/**org1**.**example**.**com**/**peers**/**peer0**.**org1**.**example**.**com**/**tls**/**ca**.**crt
+```
 
 Open a new terminal window and view the private data logs for this peer by running the following command:
 
+새 터미널 창을 열고 다음 명령을 실행하여이 피어의 개인 데이터 로그를보십시오:
+
+```
 docker logs peer0**.**org1**.**example**.**com 2**>&**1 **|** grep **-**i **-**a **-**E 'private|pvt|privdata'
+```
 
 You should see results similar to the following. Note the highest block number in the list. In the example below, the highest block height is `4`.
 
+다음과 유사한 결과가 나타납니다. 리스트에서 가장 높은 블록 번호를 기록하십시오. 아래 예에서 가장 높은 블록 높이는 `4`입니다.
+
+```
 [pvtdatastorage] func1 **->** INFO 023 Purger started: Purging expired private data till block number [0]
 [pvtdatastorage] func1 **->** INFO 024 Purger finished
 [kvledger] CommitLegacy **->** INFO 022 Channel [mychannel]: Committed block [0] **with** 1 transaction(s)
@@ -608,100 +677,184 @@ You should see results similar to the following. Note the highest block number i
 [kvledger] CommitLegacy **->** INFO 030 Channel [mychannel]: Committed block [2] **with** 1 transaction(s)
 [kvledger] CommitLegacy **->** INFO 036 Channel [mychannel]: Committed block [3] **with** 1 transaction(s)
 [kvledger] CommitLegacy **->** INFO 03e Channel [mychannel]: Committed block [4] **with** 1 transaction(s)
+```
 
 Back in the peer container, query for the **marble1** price data by running the following command. (A Query does not create a new transaction on the ledger since no data is transacted).
 
+피어 컨테이너로 돌아가서 다음 명령을 실행하여 **marble1** 가격 데이터를 쿼리하십시오. (데이터가 처리되지 않으므로 조회는 원장에 새 트랜잭션을 작성하지 않습니다).
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 You should see results similar to:
 
+다음과 유사한 결과가 나타납니다:
+
+```
 {"docType":"marblePrivateDetails","name":"marble1","price":99}
+```
 
 The `price` data is still in the private data ledger.
 
+`price` 데이터는 여전히 private data 원장에 있습니다.
+
 Create a new **marble2** by issuing the following command. This transaction creates a new block on the chain.
 
+다음 명령을 실행하여 새로운 **marble2**를 작성하십시오. 이 트랜잭션은 체인에 새로운 블록을 생성합니다.
+
+```
 export MARBLE=$(echo -n "{\"name\":\"marble2\",\"color\":\"blue\",\"size\":35,\"owner\":\"tom\",\"price\":99}" | base64 | tr -d \\n)
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n marblesp -c '{"Args":["initMarble"]}' --transient "{\"marble\":\"$MARBLE\"}"
+```
 
 Switch back to the Terminal window and view the private data logs for this peer again. You should see the block height increase by 1.
 
+터미널 창으로 다시 전환하고 이 피어의 private data 로그를 다시보십시오. 블록 높이가 1 씩 증가하는 것을 볼 수 있습니다.
+
+```
 docker logs peer0**.**org1**.**example**.**com 2**>&**1 **|** grep **-**i **-**a **-**E 'private|pvt|privdata'
+```
 
 Back in the peer container, query for the **marble1** price data again by running the following command:
 
+피어 컨테이너로 돌아가서 다음 명령을 실행하여 **marble1** 가격 데이터를 다시 쿼리하십시오.
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 The private data has not been purged, therefore the results are unchanged from previous query:
 
+private data가 제거되지 않았으므로 결과는 이전 쿼리와 변경되지 않습니다.
+
+```
 {"docType":"marblePrivateDetails","name":"marble1","price":99}
+```
 
 Transfer marble2 to “joe” by running the following command. This transaction will add a second new block on the chain.
 
+다음 명령을 실행하여 marble2를 “joe”로 전송하십시오. 이 트랜잭션은 체인에 두 번째 새 블록을 추가합니다.
+
+```
 export MARBLE_OWNER=$(echo -n "{\"name\":\"marble2\",\"owner\":\"joe\"}" | base64 | tr -d \\n)
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n marblesp -c '{"Args":["transferMarble"]}' --transient "{\"marble_owner\":\"$MARBLE_OWNER\"}"
+```
 
 Switch back to the Terminal window and view the private data logs for this peer again. You should see the block height increase by 1.
 
+터미널 창으로 다시 전환하고 이 피어의 private data 로그를 다시보십시오. 블록 높이가 1 씩 증가하는 것을 볼 수 있습니다.
+
+```
 docker logs peer0**.**org1**.**example**.**com 2**>&**1 **|** grep **-**i **-**a **-**E 'private|pvt|privdata'
+```
 
 Back in the peer container, query for the marble1 price data by running the following command:
 
+피어 컨테이너로 돌아가서 다음 명령을 실행하여 marble1 가격 데이터를 쿼리하십시오.
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 You should still be able to see the price private data.
 
+여전히 가격 private data를 볼 수 있어야합니다.
+
+```
 {"docType":"marblePrivateDetails","name":"marble1","price":99}
+```
 
 Transfer marble2 to “tom” by running the following command. This transaction will create a third new block on the chain.
 
+다음 명령을 실행하여 marble2를 “tom”으로 전송하십시오. 이 트랜잭션은 체인에 세 번째 새 블록을 만듭니다.
+
+```
 export MARBLE_OWNER=$(echo -n "{\"name\":\"marble2\",\"owner\":\"tom\"}" | base64 | tr -d \\n)
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n marblesp -c '{"Args":["transferMarble"]}' --transient "{\"marble_owner\":\"$MARBLE_OWNER\"}"
+```
 
 Switch back to the Terminal window and view the private data logs for this peer again. You should see the block height increase by 1.
 
+터미널 창으로 다시 전환하고 이 피어의 private data 로그를 다시보십시오. 블록 높이가 1 씩 증가하는 것을 볼 수 있습니다.
+
+```
 docker logs peer0**.**org1**.**example**.**com 2**>&**1 **|** grep **-**i **-**a **-**E 'private|pvt|privdata'
+```
 
 Back in the peer container, query for the marble1 price data by running the following command:
 
+피어 컨테이너로 돌아가서 다음 명령을 실행하여 marble1 가격 데이터를 쿼리하십시오.
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 You should still be able to see the price data.
 
+여전히 가격 private data를 볼 수 있어야합니다.
+
+```
 {"docType":"marblePrivateDetails","name":"marble1","price":99}
+```
 
-Finally, transfer marble2 to “jerry” by running the following command. This transaction will create a fourth new block on the chain. The `price`private data should be purged after this transaction.
+Finally, transfer marble2 to “jerry” by running the following command. This transaction will create a fourth new block on the chain. The `price`private data should be purged after this transaction.
 
+마지막으로 다음 명령을 실행하여 marble2를“jerry”로 옮깁니다. 이 트랜잭션은 체인에 네 번째 새 블록을 만듭니다. `price`private data는 이 거래 후 제거해야합니다.
+
+```
 export MARBLE_OWNER=$(echo -n "{\"name\":\"marble2\",\"owner\":\"jerry\"}" | base64 | tr -d \\n)
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n marblesp -c '{"Args":["transferMarble"]}' --transient "{\"marble_owner\":\"$MARBLE_OWNER\"}"
+```
 
 Switch back to the Terminal window and view the private data logs for this peer again. You should see the block height increase by 1.
 
+터미널 창으로 다시 전환하고이 피어의 개인 데이터 로그를 다시보십시오. 블록 높이가 1 씩 증가하는 것을 볼 수 있습니다.
+
+```
 docker logs peer0**.**org1**.**example**.**com 2**>&**1 **|** grep **-**i **-**a **-**E 'private|pvt|privdata'
+```
 
 Back in the peer container, query for the marble1 price data by running the following command:
 
+피어 컨테이너로 돌아가서 다음 명령을 실행하여 marble1 가격 데이터를 쿼리하십시오.
+
+```
 peer chaincode query **-**C mychannel **-**n marblesp **-**c '{"Args":["readMarblePrivateDetails","marble1"]}'
+```
 
 Because the price data has been purged, you should no longer be able to see it. You should see something similar to:
 
+가격 데이터가 제거되었으므로 더 이상 볼 수 없습니다. 다음과 비슷한 내용이 표시되어야합니다.
+
+```
 Error: endorsement failure during query**.** response: status:500
 message:"{\"Error\":\"Marble private details does not exist: marble1\"}"
+```
 
 # **Using indexes with private data**
 
-Indexes can also be applied to private data collections, by packaging indexes in the `META-INF/statedb/couchdb/collections/<collection_name>/indexes`directory alongside the chaincode. An example index is available [here](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/META-INF/statedb/couchdb/collections/collectionMarbles/indexes/indexOwner.json) .
+Indexes can also be applied to private data collections, by packaging indexes in the `META-INF/statedb/couchdb/collections/<collection_name>/indexes`directory alongside the chaincode. An example index is available [here](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/META-INF/statedb/couchdb/collections/collectionMarbles/indexes/indexOwner.json).
+
+체인코드와 함께 `META-INF/statedb/couchdb/collections/<collection_name>/indexes` 디렉토리에 인덱스를 패키징하여 인덱스를 PDC에도 적용 할 수 있습니다. 예를 들어 인덱스를 사용할 수 있습니다 [here](https://github.com/hyperledger/fabric-samples/blob/master/chaincode/marbles02_private/go/META-INF/statedb/couchdb/collections/collectionMarbles/indexes/indexOwner.json).
 
 For deployment of chaincode to production environments, it is recommended to define any indexes alongside chaincode so that the chaincode and supporting indexes are deployed automatically as a unit, once the chaincode has been installed on a peer and instantiated on a channel. The associated indexes are automatically deployed upon chaincode instantiation on the channel when the `--collections-config`flag is specified pointing to the location of the collection JSON file.
+
+체인코드를 프로덕션 환경에 배포하려면 체인코드가 피어에 설치되고 채널에 인스턴스화되면 체인코드 및 지원 인덱스가 자동으로 한 단위로 배포되도록 체인코드와 함께 인덱스를 정의하는 것이 좋습니다. `--collections-config` 플래그가 컬렉션 JSON 파일의 위치를 가리키도록 지정되면 채널에서 체인코드 인스턴스화 시 관련 인덱스가 자동으로 배포됩니다.
 
 # **Additional resources**
 
 For additional private data education, a video tutorial has been created.
 
+추가적인 private data 교육을 위해 비디오 튜토리얼이 작성되었습니다.
+
 **Note**
+
+**주기**
 
 The video uses the previous lifecycle model to install private data collections with chaincode.
 
+비디오는 이전 라이프 사이클 모델을 사용하여 체인코드로 PDC를 설치합니다.
 
 [![Video Label](http://img.youtube.com/vi/qyjDi93URJE/0.jpg)](https://youtu.be/qyjDi93URJE?t=0s) 
 
