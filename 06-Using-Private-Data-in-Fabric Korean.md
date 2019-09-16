@@ -252,7 +252,7 @@ Assuming you have started the BYFN network, enter the CLI container:
 BYFN 네트워크를 시작했다는 가정하에 CLI 컨테이너를 실행합니다:
 
 ```
-docker exec **-**it cli bash
+docker exec -it cli bash
 ```
 
 Your command prompt will change to something similar to:
