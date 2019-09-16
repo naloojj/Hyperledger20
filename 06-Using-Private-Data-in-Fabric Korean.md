@@ -2,11 +2,11 @@
 
 This tutorial will demonstrate the use of collections to provide storage and retrieval of private data on the blockchain network for authorized peers of organizations.
 
-이 튜토리얼은 승인 된 조직의 피어가 컬렉션을 사용하여 블록체인 네트워크에서 private data를 저장하고 검색하는 방법을 보여줍니다.
+이 튜토리얼은 승인 된 조직의 피어가 컬렉션을 사용하여 블록체인 네트워크에서 private data를 저장하고 검색하는 방법을 설명합니다.
 
 The information in this tutorial assumes knowledge of private data stores and their use cases. For more information, check out [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html).
 
-이 튜토리얼의 정보는 private data 저장소 및 해당 사용사례에 대한 지식을 전제로 합니다. 자세한 내용은 [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html)를 확인하십시오.
+이 튜토리얼은 private data 저장소 및 해당 사용사례에 대한 지식이 있음을 전제로 합니다. 자세한 내용은 [Private data](https://hyperledger-fabric.readthedocs.io/en/latest/private-data/private-data.html)를 확인하십시오.
 
 **Note**
 
@@ -38,7 +38,7 @@ This tutorial will use the [marbles private data sample](https://github.com/hyp
 
 The first step in privatizing data on a channel is to build a collection definition which defines access to the private data.
 
-채널에서 데이터를 개인화하는 첫 번째 단계는 private data에 대한 액세스를 정의하는 콜렉션 정의를 작성하는 것입니다.
+채널에서 데이터를 개인화하는 첫 번째 단계는 private data에 대한 액세스를 정의하는 렉션 정의를 작성하는 것입니다.
 
 The collection definition describes who can persist data, how many peers the data is distributed to, how many peers are required to disseminate the private data, and how long the private data is persisted in the private database. Later, we will demonstrate how chaincode APIs `PutPrivateData`and `GetPrivateData` are used to map the collection to the private data being secured.
 
@@ -86,7 +86,7 @@ For more information on building a policy definition refer to the [Endorsement 
 
 The data to be secured by these policies is mapped in chaincode and will be shown later in the tutorial.
 
-이러한 정책으로 보호 할 데이터는 체인코드로 매핑되며 이 튜토리얼의 뒷부분에 표시됩니다.
+이러한 정책으로 보호 할 데이터는 체인코드로 매핑되며 이 튜토리얼의 뒷부분에서 설명합니다.
 
 
 This collection definition file is deployed when the chaincode definition is committed to the channel using the [peer lifecycle chaincode commit command](http://hyperledger-fabric.readthedocs.io/en/latest/commands/peerchaincode.html#peer-chaincode-instantiate). More details on this process are provided in Section 3 below.
@@ -125,7 +125,7 @@ Thus two different sets of private data are defined in the marbles private data 
 
 The following diagrams illustrate the private data model used by the marbles private data sample.
 
-다음 다이어그램은 marbles private data 샘플에서 사용하는 모델을 보여줍니다.
+다음 그림은 marbles private data 샘플에서 사용하는 모델을 보여줍니다.
 
 
 > 
@@ -172,7 +172,7 @@ To summarize, the policy definition above for our `collection.json` allows all p
 
 As an additional data privacy benefit, since a collection is being used, only the private data hashes go through orderer, not the private data itself, keeping private data confidential from orderer.
 
-컬렉션을 통한 추가적인 데이터 개인정보보호 장점으로, private data 자체가 아닌 private data 해시만 orderer를 통과하므로 orderer에게 private data의 기밀성을 유지합니다.
+컬렉션을 통한 추가적인 데이터 개인정보보호 장점으로는, private data 자체가 아닌 private data 해시만 orderer를 통과하므로 orderer에게 private data의 기밀성을 유지합니다.
 
 # **Start the network**
 
