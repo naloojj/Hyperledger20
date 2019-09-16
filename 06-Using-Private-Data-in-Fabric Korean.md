@@ -264,7 +264,6 @@ bash-4.4#
 ```
 
 1. Use the following command to package the marbles private data chaincode from the git repository inside your local container.
-
 1. 다음 명령을 사용하여 로컬 컨테이너 내의 git repository에서 marbles private data 체인코드를 패키지하십시오.
 
 ```
@@ -275,8 +274,7 @@ This command will create a chaincode package named marblesp.tar.gz.
 
 이 명령은 marblesp.tar.gz라는 이름의 체인코드 패키지를 생성합니다.
 
-2. Use the following command to install the chaincode package onto the peer `peer0.org1.example.com` in your BYFN network. By default, after starting the BYFN network, the active peer is set to`CORE_PEER_ADDRESS=peer0.org1.example.com:7051`:
-
+2. Use the following command to install the chaincode package onto the peer `peer0.org1.example.com` in your BYFN network. By default, after starting the BYFN network, the active peer is set to`CORE_PEER_ADDRESS=peer0.org1.example.com:7051`:
 2. 다음 명령을 사용하여 BYFN 네트워크의 `peerorgpeer0.org1.example.com`에 체인코드 패키지를 설치하십시오. BYFN 네트워크를 시작한 후 기본적으로 활성 피어는 `CORE_PEER_ADDRESS = peer0.org1.example.com : 7051`으로 설정됩니다:
 
 ```
@@ -293,7 +291,6 @@ A successful install command will return the chaincode identifier, similar to th
 ```
 
 3. Use the CLI to switch the active peer to the second peer in Org1 and install the chaincode. Copy and paste the following entire block of commands into the CLI container and run them:
-
 3. CLI를 사용하여 Org1에서 활성 피어를 두 번째 피어로 전환하고 체인코드를 설치하십시오. 다음 전체 명령 블록을 복사하여 CLI 컨테이너에 붙여넣고 실행하십시오.
 
 ```
@@ -302,7 +299,6 @@ peer lifecycle chaincode install marblesp.tar.gz
 ```
 
 4. Use the CLI to switch to Org2. Copy and paste the following block of commands as a group into the peer container and run them all at once:
-
 4. CLI를 사용하여 Org2로 전환하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
 
 ```
@@ -313,7 +309,6 @@ export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/pee
 ```
 
 5. Switch the active peer to the first peer in Org2 and install the chaincode:
-
 5. 활성 피어를 Org2의 첫 번째 피어로 전환하고 체인 코드를 설치하십시오.
 
 ```
@@ -322,7 +317,6 @@ peer lifecycle chaincode install marblesp.tar.gz
 ```
 
 6. Switch the active peer to the second peer in org2 and install the chaincode:
-
 6. 활성 피어를 org2의 두 번째 피어로 전환하고 체인 코드를 설치하십시오.
 
 ```
