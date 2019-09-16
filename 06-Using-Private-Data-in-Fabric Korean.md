@@ -264,6 +264,7 @@ bash-4.4#
 ```
 
 1. Use the following command to package the marbles private data chaincode from the git repository inside your local container.
+
    다음 명령을 사용하여 로컬 컨테이너 내의 git repository에서 marbles private data 체인코드를 패키지하십시오.
 
 ```
@@ -275,6 +276,7 @@ This command will create a chaincode package named marblesp.tar.gz.
 이 명령은 marblesp.tar.gz라는 이름의 체인코드 패키지를 생성합니다.
 
 2. Use the following command to install the chaincode package onto the peer `peer0.org1.example.com` in your BYFN network. By default, after starting the BYFN network, the active peer is set to`CORE_PEER_ADDRESS=peer0.org1.example.com:7051`:
+
    다음 명령을 사용하여 BYFN 네트워크의 `peerorgpeer0.org1.example.com`에 체인코드 패키지를 설치하십시오. BYFN 네트워크를 시작한 후 기본적으로 활성 피어는 `CORE_PEER_ADDRESS = peer0.org1.example.com : 7051`으로 설정됩니다:
 
 ```
@@ -291,6 +293,7 @@ A successful install command will return the chaincode identifier, similar to th
 ```
 
 3. Use the CLI to switch the active peer to the second peer in Org1 and install the chaincode. Copy and paste the following entire block of commands into the CLI container and run them:
+
    CLI를 사용하여 Org1에서 활성 피어를 두 번째 피어로 전환하고 체인코드를 설치하십시오. 다음 전체 명령 블록을 복사하여 CLI 컨테이너에 붙여넣고 실행하십시오.
 
 ```
@@ -299,6 +302,7 @@ peer lifecycle chaincode install marblesp.tar.gz
 ```
 
 4. Use the CLI to switch to Org2. Copy and paste the following block of commands as a group into the peer container and run them all at once:
+
    CLI를 사용하여 Org2로 전환하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
 
 ```
@@ -309,6 +313,7 @@ export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/pee
 ```
 
 5. Switch the active peer to the first peer in Org2 and install the chaincode:
+
    활성 피어를 Org2의 첫 번째 피어로 전환하고 체인 코드를 설치하십시오.
 
 ```
@@ -317,6 +322,7 @@ peer lifecycle chaincode install marblesp.tar.gz
 ```
 
 6. Switch the active peer to the second peer in org2 and install the chaincode:
+
    활성 피어를 org2의 두 번째 피어로 전환하고 체인 코드를 설치하십시오.
 
 ```
@@ -345,6 +351,7 @@ Run the following commands inside the CLI container to approve a definition for 
 CLI 컨테이너 내에서 다음 명령을 실행하여 Org1 및 Org2에 대한 정의를 승인하십시오.
 
 1. Use the following command to query your peer for the package ID of the installed chaincode.
+
    다음 명령을 사용하여 피어에 설치된 체인 코드의 패키지 ID를 쿼리하십시오.
 
 ```
@@ -362,6 +369,7 @@ Package ID: mycc_1:27ef99cb3cbd1b545063f018f3670eddc0d54f40b2660b8f853ad2854c49a
 ```
 
 2. Declare the package ID as an environment variable. Paste the package ID of marblespv1 returned by the `peer lifecycle chaincode queryinstalled` into the command below. The package ID may not be the same for all users, so you need to complete this step using the package ID returned from your console.
+
    패키지 ID를 환경 변수로 선언하십시오. `peer lifecycle chaincode queryinstalled`에서 반환 한 marblespv1의 패키지 ID를 아래 명령에 붙여 넣습니다. 패키지 ID가 모든 사용자에게 동일하지 않을 수 있으므로 콘솔에서 반환 된 패키지 ID를 사용하여이 단계를 완료해야합니다.
 
 ```
@@ -369,6 +377,7 @@ export CC_PACKAGE_ID=marblespv1:57f5353b2568b79cb5384b5a8458519a47186efc4fcadb98
 ```
 
 3. Make sure we are running the CLI as Org1. Copy and paste the following block of commands as a group into the peer container and run them all at once:
+
    CLI를 Org1로 실행하고 있는지 확인하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
 
 ```
@@ -380,6 +389,7 @@ export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/pee
 ```
 
 4. Use the following command to approve a definition of the marbles private data chaincode for Org1. This command includes a path to the collection definition file. The approval is distributed within each organization using gossip, so the command does not need to target every peer within an organization.
+
    다음 명령을 사용하여 Org1에 대한 marbles private data 체인코드의 정의를 승인하십시오. 이 명령에는 컬렉션 정의 파일의 경로가 포함됩니다. 승인은 gossip을 사용하여 각 조직 내에 배포되므로 이 명령은 조직 내의 모든 피어를 대상으로 지정할 필요가 없습니다.
 
 ```
@@ -396,6 +406,7 @@ When the command completes successfully you should see something similar to:
 ```
 
 5. Use the CLI to switch to Org2. Copy and paste the following block of commands as a group into the peer container and run them all at once.
+
    CLI를 사용하여 Org2로 전환하십시오. 다음 명령 블록을 그룹으로 복사하여 피어 컨테이너에 붙여넣고 한 번에 모두 실행하십시오.
 
 ```
@@ -407,6 +418,7 @@ export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/pee
 ```
 
 6. You can now approve the chaincode definition for Org2:
+
    이제 Org2에 대한 체인 코드 정의를 승인 할 수 있습니다.
 
 ```
@@ -430,6 +442,7 @@ We are ready to use the chaincode after the chaincode definition has been commit
 **Try it yourself**
 
 1. Run the following commands to commit the definition of the marbles private data chaincode to the BYFN channel `mychannel`.
+
    다음 명령을 실행하여 marbles private data 체인코드의 정의를 BYFN 채널 `mychannel`에 커밋합니다.
 
 ```
@@ -441,6 +454,7 @@ similar to:
 ```
 
 2. Use the following command to invoke the `Init` function to initialize the chaincode:
+
    다음 명령을 사용하여 `Init` 함수를 호출하여 체인코드를 초기화하십시오.
 
 ```
