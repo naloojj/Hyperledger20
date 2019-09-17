@@ -80,19 +80,20 @@ For more information on building a policy definition refer to the [Endorsement 
 ```
 // collections_config.json
 [ 
- { "name": "collectionMarbles",
-   "policy": "OR('Org1MSP.member', 'Org2MSP.member')",
-   "requiredPeerCount": 0,
-   "maxPeerCount": 3,
-   "blockToLive":1000000,
-   "memberOnlyRead": true
+ {  "name": "collectionMarbles",
+    "policy": "OR('Org1MSP.member', 'Org2MSP.member')",
+    "requiredPeerCount": 0,
+    "maxPeerCount": 3,
+    "blockToLive":1000000,
+    "memberOnlyRead": true
  },
- { "name": "collectionMarblePrivateDetails",
-   "policy": "OR('Org1MSP.member')",
-   "requiredPeerCount": 0,
-   "maxPeerCount": 3,
-   "blockToLive":3,
-   "memberOnlyRead": true }
+ {  "name": "collectionMarblePrivateDetails",
+    "policy": "OR('Org1MSP.member')",
+    "requiredPeerCount": 0,
+    "maxPeerCount": 3,
+    "blockToLive":3,
+    "memberOnlyRead": true
+ }
 ]
 ```
 
@@ -114,9 +115,17 @@ The next step in understanding how to privatize data on a channel is to build th
 채널에서 데이터를 개인화하는 방법을 이해하는 다음 단계는 체인코드에서 데이터 정의를 작성하는 것입니다. marbles private data 샘플은 private data를 데이터 액세스 방법에 따라 두 개의 개별 데이터 정의로 나눕니다.
 
 ```
-*// Peers in Org1 and Org2 will have this private data in a side database***type** marble **struct** { ObjectType **string** `json:"docType"` Name **string** `json:"name"` Color **string** `json:"color"` Size **int** `json:"size"` Owner **string** `json:"owner"`
+*// Peers in Org1 and Org2 will have this private data in a side database***type** marble **struct** {
+    ObjectType **string** `json:"docType"`
+    Name **string** `json:"name"`
+    Color **string** `json:"color"`
+    Size **int** `json:"size"`
+    Owner **string** `json:"owner"`
 }
-*// Only peers in Org1 will have this private data in a side database***type** marblePrivateDetails **struct** { ObjectType **string** `json:"docType"` Name **string** `json:"name"` Price **int** `json:"price"`
+*// Only peers in Org1 will have this private data in a side database***type** marblePrivateDetails **struct** {
+    ObjectType **string** `json:"docType"`
+    Name **string** `json:"name"`
+    Price **int** `json:"price"`
 }
 ```
 
@@ -459,11 +468,16 @@ We are ready to use the chaincode after the chaincode definition has been commit
    다음 명령을 실행하여 marbles private data 체인코드의 정의를 BYFN 채널 `mychannel`에 커밋합니다.
 
 ```
-export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem export ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt export ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt peer lifecycle chaincode commit -o orderer.example.com:7050 --channelID mychannel --name marblesp --version 1.0 --sequence 1 --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json --signature-policy "OR('Org1MSP.member','Org2MSP.member')" --init-required --tls true --cafile $ORDERER_CA --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles $ORG1_CA --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles $ORG2_CA
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+export ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt 
+export ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+peer lifecycle chaincode commit -o orderer.example.com:7050 --channelID mychannel --name marblesp --version 1.0 --sequence 1 --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json --signature-policy "OR('Org1MSP.member','Org2MSP.member')" --init-required --tls true --cafile $ORDERER_CA --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles $ORG1_CA --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles $ORG2_CA
+
 .. note:: When specifying the value of the ``--collections-config`` flag, you will need to specify the fully qualified path to the collections_config.json file. For example: .. code:: bash --collections-config $GOPATH/src/github.com/hyperledger/fabric-samples/chaincode/marbles02_private/collections_config.json
 When the commit transaction completes successfully you should see something
 similar to:
-.. code:: bash [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+
+  .. code:: bash [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
 ```
 
 2. Use the following command to invoke the `Init` function to initialize the chaincode:
