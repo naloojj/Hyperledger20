@@ -80,14 +80,17 @@ For more information on building a policy definition refer to the [Endorsement 
 ```
 // collections_config.json
 [ 
- {  "name": "collectionMarbles",
+ {
+  "name": "collectionMarbles",
     "policy": "OR('Org1MSP.member', 'Org2MSP.member')",
     "requiredPeerCount": 0,
     "maxPeerCount": 3,
     "blockToLive":1000000,
     "memberOnlyRead": true
  },
- {  "name": "collectionMarblePrivateDetails",
+
+ {
+    "name": "collectionMarblePrivateDetails",
     "policy": "OR('Org1MSP.member')",
     "requiredPeerCount": 0,
     "maxPeerCount": 3,
@@ -116,16 +119,17 @@ The next step in understanding how to privatize data on a channel is to build th
 
 ```
 *// Peers in Org1 and Org2 will have this private data in a side database***type** marble **struct** {
-    ObjectType **string** `json:"docType"`
-    Name **string** `json:"name"`
-    Color **string** `json:"color"`
-    Size **int** `json:"size"`
-    Owner **string** `json:"owner"`
+      ObjectType **string** `json:"docType"`
+      Name **string** `json:"name"`
+      Color **string** `json:"color"`
+      Size **int** `json:"size"`
+      Owner **string** `json:"owner"`
 }
+
 *// Only peers in Org1 will have this private data in a side database***type** marblePrivateDetails **struct** {
-    ObjectType **string** `json:"docType"`
-    Name **string** `json:"name"`
-    Price **int** `json:"price"`
+      ObjectType **string** `json:"docType"`
+      Name **string** `json:"name"`
+      Price **int** `json:"price"`
 }
 ```
 
