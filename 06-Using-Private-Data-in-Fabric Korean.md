@@ -182,8 +182,10 @@ Use the chaincode API `PutPrivateData()` to store the private data into the pr
 private DB에 private data를 저장하려면 체인코드 API `PutPrivateData ()`를 사용하십시오. API에는 컬렉션 이름도 필요합니다. marbles private data 샘플에는 서로 다른 두 가지 컬렉션이 포함되어 있으므로 체인코드에서 두 번 호출됩니다.
 
 1. Write the private data `name, color, size and owner` using the collection named `collectionMarbles`.
+
    컬렉션 이름 `collectionMarbles`를 사용하여 private data `name, color, size and owner` 쓰기.
 2. Write the private data `price` using the collection named`collectionMarblePrivateDetails`.
+
    컬렉션 이름 `collectionMarblePrivateDetails`를 사용하여 private data `price` 쓰기.
 
 For example, in the following snippet of the `initMarble` function,`PutPrivateData()` is called twice, once for each set of private data.
