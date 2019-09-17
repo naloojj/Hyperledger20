@@ -38,7 +38,7 @@ This tutorial will use the [marbles private data sample](https://github.com/hyp
 
 The first step in privatizing data on a channel is to build a collection definition which defines access to the private data.
 
-채널에서 데이터를 개인화하는 첫 번째 단계는 private data에 대한 액세스를 정의하는 렉션 정의를 작성하는 것입니다.
+채널에서 데이터를 개인화하는 첫 번째 단계는 private data에 대한 액세스를 정의하는 컬렉션 정의를 작성하는 것입니다.
 
 The collection definition describes who can persist data, how many peers the data is distributed to, how many peers are required to disseminate the private data, and how long the private data is persisted in the private database. Later, we will demonstrate how chaincode APIs `PutPrivateData`and `GetPrivateData` are used to map the collection to the private data being secured.
 
@@ -79,7 +79,20 @@ For more information on building a policy definition refer to the [Endorsement 
 
 ```
 // collections_config.json
-[ { "name": "collectionMarbles", "policy": "OR('Org1MSP.member', 'Org2MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":1000000, "memberOnlyRead": true }, { "name": "collectionMarblePrivateDetails", "policy": "OR('Org1MSP.member')", "requiredPeerCount": 0, "maxPeerCount": 3, "blockToLive":3, "memberOnlyRead": true }
+[ 
+ { "name": "collectionMarbles",
+   "policy": "OR('Org1MSP.member', 'Org2MSP.member')",
+   "requiredPeerCount": 0,
+   "maxPeerCount": 3,
+   "blockToLive":1000000,
+   "memberOnlyRead": true
+ },
+ { "name": "collectionMarblePrivateDetails",
+   "policy": "OR('Org1MSP.member')",
+   "requiredPeerCount": 0,
+   "maxPeerCount": 3,
+   "blockToLive":3,
+   "memberOnlyRead": true }
 ]
 ```
 
